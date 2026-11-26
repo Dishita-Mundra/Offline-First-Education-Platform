@@ -1,0 +1,6 @@
+{
+  "name": "LogicLabs – Smart Learning Platform",
+  "description": "Offline-First CBSE Smart Learning Platform for Classes 1 to 10 with downloadable learning packages, smart quizzes, AI doubt assistant, and automatic cloud sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

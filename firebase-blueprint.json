@@ -1,0 +1,400 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user account with role and learning preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "role": { "type": "string", "enum": ["student", "teacher", "admin"] },
+        "teacherStatus": { "type": "string", "enum": ["none", "pending", "approved", "rejected"] },
+        "classNumber": { "type": "integer" },
+        "board": { "type": "string", "enum": ["CBSE"] },
+        "preferredLanguage": { "type": "string", "enum": ["English", "Hindi"] },
+        "dailyGoalMinutes": { "type": "integer" },
+        "specialization": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "teacherStatus", "classNumber", "board", "preferredLanguage", "createdAt", "updatedAt"]
+    },
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Classroom-safe non-PII student progress profile for leaderboards and teacher monitoring",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "classNumber": { "type": "integer" },
+        "xp": { "type": "integer" },
+        "streakDays": { "type": "integer" },
+        "lessonsCompleted": { "type": "integer" },
+        "avgQuizScore": { "type": "number" },
+        "badges": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "classNumber", "xp", "streakDays", "lessonsCompleted", "avgQuizScore", "updatedAt"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Teacher-created CBSE course",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 1500 },
+        "classNumber": { "type": "integer" },
+        "subjectId": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "subjectName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "teacherId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "teacherName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "description", "classNumber", "subjectId", "subjectName", "teacherId", "teacherName", "published", "createdAt", "updatedAt"]
+    },
+    "Lesson": {
+      "title": "Lesson",
+      "description": "Custom lesson inside a teacher course",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "courseId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "chapterTitle": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "content": { "type": "string", "maxLength": 15000 },
+        "objectives": { "type": "array" },
+        "videoUrl": { "type": "string", "maxLength": 500 },
+        "resourceUrl": { "type": "string", "maxLength": 500 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "teacherId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "courseId", "title", "chapterTitle", "content", "classNumber", "subjectName", "teacherId", "createdAt", "updatedAt"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "Teacher-created MCQ quiz",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "chapterTitle": { "type": "string", "maxLength": 180 },
+        "timeLimitMinutes": { "type": "integer" },
+        "passingScore": { "type": "integer" },
+        "questions": { "type": "array" },
+        "teacherId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "classNumber", "subjectName", "timeLimitMinutes", "passingScore", "questions", "teacherId", "published", "createdAt", "updatedAt"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Student quiz attempt with deterministic operationId for offline sync dedup",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "operationId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "quizId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "quizTitle": { "type": "string", "maxLength": 200 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "chapterId": { "type": "string", "maxLength": 128 },
+        "score": { "type": "integer" },
+        "totalQuestions": { "type": "integer" },
+        "percentage": { "type": "number" },
+        "passed": { "type": "boolean" },
+        "attemptedOffline": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "operationId", "userId", "quizId", "quizTitle", "classNumber", "subjectName", "score", "totalQuestions", "percentage", "passed", "attemptedOffline", "createdAt"]
+    },
+    "LessonProgress": {
+      "title": "LessonProgress",
+      "description": "Student lesson completion and time spent tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 160, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "lessonId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "chapterTitle": { "type": "string", "maxLength": 180 },
+        "completed": { "type": "boolean" },
+        "timeSpentMinutes": { "type": "integer" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "lessonId", "classNumber", "subjectName", "completed", "timeSpentMinutes", "updatedAt"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Teacher-created CBSE assignment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 180 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "dueDate": { "type": "string", "maxLength": 40 },
+        "maxMarks": { "type": "integer" },
+        "teacherId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "teacherName": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "description", "classNumber", "subjectName", "dueDate", "maxMarks", "teacherId", "teacherName", "createdAt", "updatedAt"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Student assignment submission and grading record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "assignmentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "assignmentTitle": { "type": "string", "maxLength": 180 },
+        "teacherId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "studentName": { "type": "string", "maxLength": 100 },
+        "classNumber": { "type": "integer" },
+        "answerText": { "type": "string", "maxLength": 5000 },
+        "attachmentName": { "type": "string", "maxLength": 200 },
+        "attachmentUrl": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["submitted", "graded"] },
+        "marks": { "type": "integer" },
+        "feedback": { "type": "string", "maxLength": 1000 },
+        "gradedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "assignmentId", "assignmentTitle", "userId", "studentName", "classNumber", "answerText", "status", "createdAt", "updatedAt"]
+    },
+    "PersonalNote": {
+      "title": "PersonalNote",
+      "description": "Student digital notebook entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "chapterTitle": { "type": "string", "maxLength": 180 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "classNumber", "subjectName", "title", "content", "createdAt", "updatedAt"]
+    },
+    "Bookmark": {
+      "title": "Bookmark",
+      "description": "Student bookmarked chapter/lesson",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 160, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "lessonId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 180 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "lessonId", "title", "classNumber", "subjectName", "createdAt"]
+    },
+    "Discussion": {
+      "title": "Discussion",
+      "description": "Doubt discussion forum thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorRole": { "type": "string", "enum": ["student", "teacher", "admin"] },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "minLength": 3, "maxLength": 200 },
+        "body": { "type": "string", "minLength": 3, "maxLength": 3000 },
+        "resolved": { "type": "boolean" },
+        "reported": { "type": "boolean" },
+        "replyCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "authorName", "authorRole", "classNumber", "subjectName", "title", "body", "resolved", "reported", "replyCount", "createdAt", "updatedAt"]
+    },
+    "DiscussionReply": {
+      "title": "DiscussionReply",
+      "description": "Reply to a doubt forum thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "discussionId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "authorName": { "type": "string", "maxLength": 100 },
+        "authorRole": { "type": "string", "enum": ["student", "teacher", "admin"] },
+        "body": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "isTeacherAnswer": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "discussionId", "userId", "authorName", "authorRole", "body", "isTeacherAnswer", "createdAt"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Earned completion certificate",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "studentName": { "type": "string", "maxLength": 100 },
+        "classNumber": { "type": "integer" },
+        "subjectName": { "type": "string", "maxLength": 80 },
+        "courseTitle": { "type": "string", "maxLength": 180 },
+        "scorePercent": { "type": "number" },
+        "issuedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "studentName", "classNumber", "subjectName", "courseTitle", "scorePercent", "issuedAt"]
+    },
+    "ParentReport": {
+      "title": "ParentReport",
+      "description": "Authorized shareable parent progress report",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "studentName": { "type": "string", "maxLength": 100 },
+        "classNumber": { "type": "integer" },
+        "lessonsCompleted": { "type": "integer" },
+        "avgQuizScore": { "type": "number" },
+        "streakDays": { "type": "integer" },
+        "xp": { "type": "integer" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentUid", "studentName", "classNumber", "lessonsCompleted", "avgQuizScore", "streakDays", "xp", "active", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Platform or user notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 160 },
+        "message": { "type": "string", "maxLength": 600 },
+        "type": { "type": "string", "enum": ["announcement", "quiz", "assignment", "feedback", "sync"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "createdAt"]
+    },
+    "TeacherInvitation": {
+      "title": "TeacherInvitation",
+      "description": "Admin-issued invitation code for teacher onboarding",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "minLength": 6, "maxLength": 40, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "createdBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "used": { "type": "boolean" },
+        "usedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "createdBy", "used", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Contact form message from landing page",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 100 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "message": { "type": "string", "minLength": 5, "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Private user profile with PII isolated to owner and admin"
+    },
+    "/studentProfiles/{userId}": {
+      "schema": { "$ref": "#/entities/StudentProfile" },
+      "description": "Non-PII student stats for class leaderboards and teacher monitoring"
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Teacher-created courses"
+    },
+    "/lessons/{lessonId}": {
+      "schema": { "$ref": "#/entities/Lesson" },
+      "description": "Custom lessons linked to courses"
+    },
+    "/quizzes/{quizId}": {
+      "schema": { "$ref": "#/entities/Quiz" },
+      "description": "Teacher-created MCQ quizzes"
+    },
+    "/quizAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/QuizAttempt" },
+      "description": "Student quiz attempts synced from online or offline queue"
+    },
+    "/lessonProgress/{progressId}": {
+      "schema": { "$ref": "#/entities/LessonProgress" },
+      "description": "Student lesson completion records"
+    },
+    "/assignments/{assignmentId}": {
+      "schema": { "$ref": "#/entities/Assignment" },
+      "description": "Teacher assignments"
+    },
+    "/submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/Submission" },
+      "description": "Student assignment submissions"
+    },
+    "/personalNotes/{noteId}": {
+      "schema": { "$ref": "#/entities/PersonalNote" },
+      "description": "Student personal digital notebook notes"
+    },
+    "/bookmarks/{bookmarkId}": {
+      "schema": { "$ref": "#/entities/Bookmark" },
+      "description": "Student bookmarked chapters and lessons"
+    },
+    "/discussions/{discussionId}": {
+      "schema": { "$ref": "#/entities/Discussion" },
+      "description": "Doubt discussion forum threads"
+    },
+    "/discussions/{discussionId}/replies/{replyId}": {
+      "schema": { "$ref": "#/entities/DiscussionReply" },
+      "description": "Replies under a doubt forum thread"
+    },
+    "/certificates/{certId}": {
+      "schema": { "$ref": "#/entities/Certificate" },
+      "description": "Student completion certificates"
+    },
+    "/parentReports/{reportId}": {
+      "schema": { "$ref": "#/entities/ParentReport" },
+      "description": "Authorized shareable parent progress reports"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Notifications for students, teachers, and announcements"
+    },
+    "/teacherInvitations/{inviteCode}": {
+      "schema": { "$ref": "#/entities/TeacherInvitation" },
+      "description": "Admin-issued teacher invitation codes"
+    },
+    "/contactMessages/{messageId}": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Contact form messages readable only by admin"
+    }
+  }
+}
